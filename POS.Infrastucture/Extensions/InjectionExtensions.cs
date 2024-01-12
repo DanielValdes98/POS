@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using POS.Infrastucture.Persistences.Context;
+using POS.Infrastucture.Persistences.Interfaces;
+using POS.Infrastucture.Persistences.Repositories;
 
 namespace POS.Infrastucture.Extensions
 {
@@ -25,6 +27,9 @@ namespace POS.Infrastucture.Extensions
                     b => b.MigrationsAssembly(assembly)),
                 // Se establece el tiempo de vida del servicio como Transient
                 ServiceLifetime.Transient);
+
+            // Se agregan los repositorios como servicios
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             // Se devuelve el objeto services modificado
             return services;
