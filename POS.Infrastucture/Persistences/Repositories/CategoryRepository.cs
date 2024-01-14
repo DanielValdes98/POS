@@ -49,7 +49,7 @@ namespace POS.Infrastucture.Persistences.Repositories
                 categories = categories.Where(x => x.AuditCreateDate >= Convert.ToDateTime(filters.StartDate) && x.AuditCreateDate <= Convert.ToDateTime(filters.EndDate).AddDays(1));
             }
 
-            if (filters.Sort is not null) filters.Sort = "CategoryId";
+            if (filters.Sort is null) filters.Sort = "CategoryId";
 
             response.TotalRecords = await categories.CountAsync();
             response.Items = await Ordering(filters, categories, !(bool)filters.Download!).ToListAsync();

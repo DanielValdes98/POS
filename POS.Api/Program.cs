@@ -1,3 +1,4 @@
+using POS.Application.Extensions;
 using POS.Infrastucture.Extensions;
 
 // Se crea el constructor de la aplicación web
@@ -5,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Agregar servicios al contenedor de servicios
 builder.Services.AddInjectionInfrastucture(builder.Configuration);
+builder.Services.AddInjectionApplication(builder.Configuration);
 
 // Se añaden controladores MVC a los servicios
 builder.Services.AddControllers();
