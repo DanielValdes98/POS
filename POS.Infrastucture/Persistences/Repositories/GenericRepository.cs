@@ -15,7 +15,7 @@ namespace POS.Infrastucture.Persistences.Repositories
         private readonly PosContext _context;
         private readonly DbSet<T> _entity;
 
-        public GenericRepository(PosContext context, DbSet<T> entity)
+        public GenericRepository(PosContext context)
         {
             _context = context;
             _entity = context.Set<T>();

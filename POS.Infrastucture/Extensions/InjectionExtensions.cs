@@ -30,6 +30,7 @@ namespace POS.Infrastucture.Extensions
 
             // Se agregan los repositorios como servicios
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             // Se devuelve el objeto services modificado
             return services;

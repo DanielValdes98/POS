@@ -51,7 +51,7 @@ namespace POS.Application.Services
         {
             var response = new BaseResponse<IEnumerable<CategorySelectResponseDTO>>();
 
-            var categories = await _unitOfWork.Category.ListSelectCategories();
+            var categories = await _unitOfWork.Category.GetAllAsync();
 
             if (categories is not null)
             {
@@ -72,7 +72,7 @@ namespace POS.Application.Services
         {
             var response = new BaseResponse<CategoryResponseDTO>();
 
-            var category = await _unitOfWork.Category.CategoryById(categoryId);
+            var category = await _unitOfWork.Category.GetByIdAsync(categoryId);
 
             if (category is not null)
             {
@@ -103,7 +103,7 @@ namespace POS.Application.Services
             }
 
             var category = _mapper.Map<Category>(requestDTO);
-            response.Data = await _unitOfWork.Category.RegisterCategory(category);
+            response.Data = await _unitOfWork.Category.RegisterAsync(category);
 
             if (response.Data)
             {
@@ -131,8 +131,8 @@ namespace POS.Application.Services
             }
 
             var category = _mapper.Map<Category>(requestDTO);
-            category.CategoryId = categoryId;
-            response.Data = await _unitOfWork.Category.EditCategory(category);
+            category.Id = categoryId;
+            response.Data = await _unitOfWork.Category.EditAsync(category);
 
             if (response.Data)
             {
@@ -159,7 +159,7 @@ namespace POS.Application.Services
                 response.Message = ReplyMessage.MESSAGE_QUERY_EMPTY;
             }
 
-            response.Data = await _unitOfWork.Category.RemoveCategory(categoryId);
+            response.Data = await _unitOfWork.Category.RemoveAsync(categoryId);
 
             if (response.Data)
             {
@@ -175,9 +175,5 @@ namespace POS.Application.Services
             return response;
         }
 
-        public Task<BaseResponse<IEnumerable<CategorySelectResponseDTO>>> ListSelectCategories(BaseFiltersRequest filters)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
