@@ -37,3 +37,6 @@ app.MapControllers();
 
 // Se ejecuta la aplicación
 app.Run();
+
+// Para hacer pruebas unitarios y sea accesible a la capa de Test
+public partial class Program { }
