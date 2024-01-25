@@ -1,4 +1,4 @@
-﻿namespace POS.Application.DTOs.Response
+﻿namespace POS.Application.DTOs.Category.Response
 {
     // Qué datos voy a mostrar em mi endpoint resultante como response (Swagger)
     public class CategoryResponseDTO
@@ -8,6 +8,6 @@
         public string? Description { get; set; }
         public DateTime AuditCreateDate { get; set; }
         public int State { get; set; }
-        public string? StateCegory { get; set; }
+        public string? StateCategory { get; set; }
     }
 }

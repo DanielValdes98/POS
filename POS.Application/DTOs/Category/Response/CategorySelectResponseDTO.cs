@@ -1,4 +1,4 @@
-﻿namespace POS.Application.DTOs.Response
+﻿namespace POS.Application.DTOs.Category.Response
 {
     public class CategorySelectResponseDTO
     {

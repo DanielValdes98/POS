@@ -3,6 +3,9 @@ using POS.Infrastucture.Extensions;
 
 // Se crea el constructor de la aplicación web
 var builder = WebApplication.CreateBuilder(args);
+var Configuration = builder.Configuration;
+
+var Cors = "Cors";
 
 // Agregar servicios al contenedor de servicios
 builder.Services.AddInjectionInfrastucture(builder.Configuration);
@@ -15,8 +18,21 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name : Cors,
+        builder =>
+        {
+            builder.WithOrigins("*"); // Acepta todos los dominios
+            builder.AllowAnyMethod(); // Acepta todos los métodos
+            builder.AllowAnyHeader(); // Acepta todos los encabezados
+        }); 
+});
+
 // Se construye la aplicación
 var app = builder.Build();
+
+app.UseCors(Cors);
 
 // Configurar el pipeline de solicitudes HTTP
 if (app.Environment.IsDevelopment())
