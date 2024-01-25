@@ -1,3 +1,4 @@
+using POS.Api.Extensions;
 using POS.Application.Extensions;
 using POS.Infrastucture.Extensions;
 
@@ -10,13 +11,14 @@ var Cors = "Cors";
 // Agregar servicios al contenedor de servicios
 builder.Services.AddInjectionInfrastucture(builder.Configuration);
 builder.Services.AddInjectionApplication(builder.Configuration);
+builder.Services.AddAuthentication(Configuration);
 
 // Se añaden controladores MVC a los servicios
 builder.Services.AddControllers();
 
 // Se añaden servicios para Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwagger();
 
 builder.Services.AddCors(options =>
 {
@@ -44,6 +46,8 @@ if (app.Environment.IsDevelopment())
 
 // Redirección HTTPS
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 // Autorización
 app.UseAuthorization();
