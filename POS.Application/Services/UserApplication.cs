@@ -61,6 +61,11 @@ namespace POS.Application.Services
 
             account.Password = BC.HashPassword(account.Password);
 
+            if(requestDTO.Image is not null)
+            {
+                account.Image = await _unitOfWork.Storage.SaveFile(AzureContainers.USERS, requestDTO.Image);
+            }
+
             response.Data = await _unitOfWork.User.RegisterAsync(account);
 
             if (response.Data)

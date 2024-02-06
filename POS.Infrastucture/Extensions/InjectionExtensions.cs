@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using POS.Infrastucture.FileStorage;
 using POS.Infrastucture.Persistences.Context;
 using POS.Infrastucture.Persistences.Interfaces;
 using POS.Infrastucture.Persistences.Repositories;
@@ -31,6 +32,7 @@ namespace POS.Infrastucture.Extensions
             // Se agregan los repositorios como servicios
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddScoped<IAzureStorage, AzureStorage>();
 
             // Se devuelve el objeto services modificado
             return services;
