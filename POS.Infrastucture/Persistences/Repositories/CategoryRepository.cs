@@ -19,7 +19,8 @@ namespace POS.Infrastucture.Persistences.Repositories
             //                  where c.AuditDeleteUser == null && c.AuditDeleteDate == null // Traer las categorias que no han sido eliminadas por ningun usuario
             //                  select c).AsNoTracking().AsQueryable(); // AsNoTracking para no traer los datos de auditoria y AsQueryable para poder aplicar filtros
 
-            var categories = GetEntityQuery(x => x.AuditDeleteUser == null && x.AuditDeleteDate == null);
+            var categories = GetEntityQuery(x => x.AuditDeleteUser == null && x.AuditDeleteDate == null)
+                .AsNoTracking();
 
             if (filters.NumFilter is not null && !string.IsNullOrEmpty(filters.TextFilter))
             {
