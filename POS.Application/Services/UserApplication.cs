@@ -10,6 +10,7 @@ using POS.Utilities.Static;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using WatchDog;
 using BC = BCrypt.Net.BCrypt;
 
 namespace POS.Application.Services
@@ -31,24 +32,33 @@ namespace POS.Application.Services
         {
             var response = new BaseResponse<string>();
 
-            // Busca la cuenta (información) por el nombre de usuario
-            var account = await _unitOfWork.User.AccountByUserName(requestDTO.Username!);
-
-            if(account is not null)
+            try
             {
-                // Verifica si la contraseña es correcta
-                if(BC.Verify(requestDTO.Password, account.Password))
+                // Busca la cuenta (información) por el nombre de usuario
+                var account = await _unitOfWork.User.AccountByUserName(requestDTO.Username!);
+
+                if (account is not null)
                 {
-                    response.IsSuccess = true;
-                    response.Data = GenerateToken(account); // Genera el token
-                    response.Message = ReplyMessage.MESSAGE_TOKEN;
-                    
+                    // Verifica si la contraseña es correcta
+                    if (BC.Verify(requestDTO.Password, account.Password))
+                    {
+                        response.IsSuccess = true;
+                        response.Data = GenerateToken(account); // Genera el token
+                        response.Message = ReplyMessage.MESSAGE_TOKEN;
+
+                    }
+                }
+                else
+                {
+                    response.IsSuccess = false;
+                    response.Message = ReplyMessage.MESSAGE_TOKEN_ERROR;
                 }
             }
-            else
+            catch (Exception ex)
             {
                 response.IsSuccess = false;
-                response.Message = ReplyMessage.MESSAGE_TOKEN_ERROR;
+                response.Message = ReplyMessage.MESSAGE_EXCEPTION;
+                WatchLogger.Log(ex.Message);
             }
 
             return response;
@@ -57,26 +67,37 @@ namespace POS.Application.Services
         public async Task<BaseResponse<bool>> RegisterUser(UserRequestDTO requestDTO)
         {
             var response = new BaseResponse<bool>();
-            var account = _mapper.Map<User>(requestDTO);
 
-            account.Password = BC.HashPassword(account.Password);
-
-            if(requestDTO.Image is not null)
+            try
             {
-                account.Image = await _unitOfWork.Storage.SaveFile(AzureContainers.USERS, requestDTO.Image);
-            }
+                var account = _mapper.Map<User>(requestDTO);
 
-            response.Data = await _unitOfWork.User.RegisterAsync(account);
+                account.Password = BC.HashPassword(account.Password);
 
-            if (response.Data)
-            {
-                response.IsSuccess = true;
-                response.Message = ReplyMessage.MESSAGE_SAVE;
+                if (requestDTO.Image is not null)
+                {
+                    account.Image = await _unitOfWork.Storage.SaveFile(AzureContainers.USERS, requestDTO.Image);
+                }
+
+                response.Data = await _unitOfWork.User.RegisterAsync(account);
+
+                if (response.Data)
+                {
+                    response.IsSuccess = true;
+                    response.Message = ReplyMessage.MESSAGE_SAVE;
+                }
+                else
+                {
+                    response.IsSuccess = false;
+                    response.Message = ReplyMessage.MESSAGE_FAILDED;
+                }
+
             }
-            else
+            catch (Exception ex)
             {
                 response.IsSuccess = false;
-                response.Message = ReplyMessage.MESSAGE_FAILDED;
+                response.Message = ReplyMessage.MESSAGE_EXCEPTION;
+                WatchLogger.Log(ex.Message);
             }
 
             return response;

@@ -1,6 +1,7 @@
 using POS.Api.Extensions;
 using POS.Application.Extensions;
 using POS.Infrastucture.Extensions;
+using WatchDog;
 
 // Se crea el constructor de la aplicación web
 var builder = WebApplication.CreateBuilder(args);
@@ -44,6 +45,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseWatchDogExceptionLogger();
+
 // Redirección HTTPS
 app.UseHttpsRedirection();
 
@@ -54,6 +57,12 @@ app.UseAuthorization();
 
 // Mapeo de controladores MVC
 app.MapControllers();
+
+app.UseWatchDog(configuration =>
+{
+    configuration.WatchPageUsername = Configuration.GetSection("WatchDog:Username").Value;
+    configuration.WatchPagePassword = Configuration.GetSection("WatchDog:Password").Value;
+});
 
 // Se ejecuta la aplicación
 app.Run();

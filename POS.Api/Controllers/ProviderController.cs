@@ -6,7 +6,7 @@ using POS.Infrastucture.Commons.Bases.Request;
 
 namespace POS.Api.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ProviderController : ControllerBase
