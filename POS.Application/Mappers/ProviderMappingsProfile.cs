@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using POS.Application.DTOs.Provider.Request;
 using POS.Application.DTOs.Provider.Response;
 using POS.Domain.Entities;
 using POS.Infrastucture.Commons.Bases.Response;
@@ -18,6 +19,8 @@ namespace POS.Application.Mappers
 
             CreateMap<BaseEntityResponse<Provider>, BaseEntityResponse<ProviderResponseDTO>>()
                 .ReverseMap();
+
+            CreateMap<ProviderRequestDTO, Provider>();
         }
     }
 }

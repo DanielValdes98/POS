@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using POS.Application.Commons.Bases;
+using POS.Application.DTOs.Provider.Request;
 using POS.Application.DTOs.Provider.Response;
 using POS.Application.Interfaces;
+using POS.Domain.Entities;
 using POS.Infrastucture.Commons.Bases.Request;
 using POS.Infrastucture.Commons.Bases.Response;
 using POS.Infrastucture.Persistences.Interfaces;
@@ -35,6 +37,47 @@ namespace POS.Application.Services
             {
                 response.IsSuccess = false;
                 response.Message = ReplyMessage.MESSAGE_QUERY_EMPTY;
+            }
+
+            return response;
+        }
+
+        public async Task<BaseResponse<ProviderResponseDTO>> ProviderById(int providerId)
+        {
+            var response = new BaseResponse<ProviderResponseDTO>();
+            var provider = await _unitOfWork.Provider.GetByIdAsync(providerId);
+
+            if (provider is not null)
+            {
+                response.IsSuccess = true;
+                response.Data = _mapper.Map<ProviderResponseDTO>(provider);
+                response.Message = ReplyMessage.MESSAGE_QUERY;
+            }
+            else
+            {
+                response.IsSuccess = false;
+                response.Message = ReplyMessage.MESSAGE_QUERY_EMPTY;
+            }
+
+            return response;
+        }
+
+        public async Task<BaseResponse<bool>> RegisterProvider(ProviderRequestDTO requestDTO)
+        {
+            var response = new BaseResponse<bool>();
+            var provider = _mapper.Map<Provider>(requestDTO);
+
+            response.Data = await _unitOfWork.Provider.RegisterAsync(provider);
+
+            if (response.Data)
+            {
+                response.IsSuccess = true;
+                response.Message = ReplyMessage.MESSAGE_SAVE;
+            }
+            else
+            {
+                response.IsSuccess = false;
+                response.Message = ReplyMessage.MESSAGE_FAILDED;
             }
 
             return response;

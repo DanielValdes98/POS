@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace POS.Infrastucture.Persistences.Interfaces
 {
-    public interface IProviderRepository
+    public interface IProviderRepository : IGenericRepository<Provider>
     {
         Task<BaseEntityResponse<Provider>> ListProviders(BaseFiltersRequest filters);
     }
